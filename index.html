@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Personal journal of Frenkhy Tonga Retang — Data Science, Research, and Opinion. Institut Teknologi Sains Bandung.">
+  <meta name="author" content="Frenkhy Tonga Retang">
+  <meta property="og:title" content="Frenkhy Tonga Retang">
+  <meta property="og:description" content="Data Science · Research · Opinion">
+  <meta property="og:type" content="website">
+  <title>Frenkhy Tonga Retang</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --black: #111110; --gray-9: #1c1c1a; --gray-7: #3d3d39; --gray-5: #6b6b66;
+      --gray-3: #b4b2a9; --gray-1: #e8e6e0; --gray-0: #f5f4f0; --white: #fafaf8;
+      --accent: #1a3a5c; --accent-light: #e8eef5;
+      --gold: #7a5c1e; --gold-light: #f5eddb;
+      --silver: #4a4a4a; --silver-light: #eeece8;
+      --teal: #0f5c48; --teal-light: #e0f0eb;
+      --serif: 'Lora', Georgia, serif; --sans: 'DM Sans', system-ui, sans-serif;
+    }
+    html { font-size: 16px; }
+    body { font-family: var(--sans); background: var(--white); color: var(--black); line-height: 1.6; overflow-x: hidden; }
+    a { color: inherit; text-decoration: none; }
+
+    /* TOPBAR */
+    .topbar { display: flex; align-items: center; justify-content: space-between; padding: .55rem 2.5rem; border-bottom: 1px solid var(--gray-1); background: var(--white); position: sticky; top: 0; z-index: 10; }
+    .topbar-date { font-size: 11px; color: var(--gray-5); letter-spacing: .06em; }
+    .topbar-right { display: flex; align-items: center; gap: 1.5rem; }
+    .topbar-links { display: flex; gap: 1.5rem; }
+    .topbar-links a { font-size: 11px; color: var(--gray-5); letter-spacing: .04em; transition: color .15s; cursor: pointer; }
+    .topbar-links a:hover { color: var(--black); }
+
+    /* LANGUAGE TOGGLE */
+    .lang-toggle {
+      display: flex; align-items: center; gap: 0;
+      border: 1px solid var(--gray-1); border-radius: 4px; overflow: hidden;
+    }
+    .lang-btn {
+      font-size: 10.5px; font-weight: 500; letter-spacing: .06em;
+      padding: 3px 9px; cursor: pointer; transition: background .15s, color .15s;
+      color: var(--gray-5); background: transparent; border: none;
+      font-family: var(--sans);
+    }
+    .lang-btn.active { background: var(--black); color: var(--white); }
+    .lang-btn:not(.active):hover { background: var(--gray-0); color: var(--black); }
+
+    /* MASTHEAD */
+    .masthead { padding: 2.25rem 2.5rem 1.75rem; border-bottom: 2px solid var(--black); }
+    .mast-label { font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--gray-5); margin-bottom: .6rem; }
+    .mast-name { font-family: var(--serif); font-size: 38px; font-weight: 500; line-height: 1.08; margin-bottom: .5rem; }
+    .mast-sub { font-size: 13px; color: var(--gray-5); font-weight: 300; }
+
+    /* CATEGORY NAV */
+    .catnav { display: flex; padding: 0 2.5rem; border-bottom: 1px solid var(--gray-1); overflow-x: auto; }
+    .catnav a { font-size: 11.5px; padding: .7rem 1.1rem .7rem 0; margin-right: .75rem; color: var(--gray-5); border-bottom: 2px solid transparent; white-space: nowrap; cursor: pointer; transition: color .15s, border-color .15s; }
+    .catnav a:hover, .catnav a.active { color: var(--black); border-bottom-color: var(--black); }
+
+    /* LAYOUT */
+    .body-grid { display: grid; grid-template-columns: 1fr 300px; border-bottom: 1px solid var(--gray-1); }
+    .main-col { padding: 2rem 2rem 2rem 2.5rem; border-right: 1px solid var(--gray-1); }
+    .side-col { padding: 1.75rem 2.5rem 2rem 1.75rem; }
+    .eyebrow { font-size: 10px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: var(--gray-5); margin-bottom: .6rem; }
+
+    /* FEATURED */
+    .featured { margin-bottom: 1.75rem; padding-bottom: 1.75rem; border-bottom: 1px solid var(--gray-1); }
+    .feat-cat { font-size: 10px; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); margin-bottom: .5rem; }
+    .feat-title { font-family: var(--serif); font-size: 22px; font-weight: 500; line-height: 1.28; margin-bottom: .65rem; cursor: pointer; transition: color .2s; }
+    .feat-title:hover { color: var(--accent); }
+    .feat-deck { font-size: 13.5px; color: var(--gray-7); line-height: 1.7; font-weight: 300; margin-bottom: .8rem; }
+    .byline { font-size: 11px; color: var(--gray-5); }
+    .rule { border: none; border-top: 1px solid var(--gray-1); margin: 1.5rem 0; }
+
+    /* ARTICLE ROWS */
+    .art-row { padding: .95rem 0; border-bottom: 1px solid var(--gray-1); cursor: pointer; transition: background .15s, padding-left .2s; border-radius: 4px; }
+    .art-row:last-child { border-bottom: none; }
+    .art-row:hover { background: var(--gray-0); padding-left: .6rem; }
+    .art-eye { font-size: 10px; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); margin-bottom: .3rem; }
+    .art-title { font-size: 13.5px; font-weight: 500; line-height: 1.4; margin-bottom: .25rem; }
+    .art-meta { font-size: 11px; color: var(--gray-5); }
+
+    /* SIDEBAR */
+    .side-section { margin-bottom: 1.75rem; }
+    .side-label { font-size: 10px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: var(--gray-5); padding-bottom: .6rem; border-bottom: 1px solid var(--gray-1); margin-bottom: 1rem; }
+    .bio-name { font-size: 14px; font-weight: 500; margin-bottom: .3rem; }
+    .bio-desc { font-size: 12px; color: var(--gray-7); line-height: 1.65; font-weight: 300; margin-bottom: .9rem; }
+    .bio-links { display: flex; flex-direction: column; gap: .5rem; }
+    .bio-link { font-size: 11.5px; color: var(--gray-5); display: flex; align-items: center; gap: .5rem; transition: color .15s; }
+    .bio-link:hover { color: var(--black); }
+    .bio-link svg { width: 13px; height: 13px; flex-shrink: 0; }
+
+    /* AWARDS */
+    .award-row { display: flex; align-items: flex-start; gap: .7rem; padding: .65rem 0; border-bottom: 1px solid var(--gray-1); }
+    .award-row:last-child { border-bottom: none; }
+    .medal { font-size: 10px; font-weight: 500; padding: 2px 7px; border-radius: 3px; white-space: nowrap; margin-top: 1px; flex-shrink: 0; }
+    .m-gold { background: var(--gold-light); color: var(--gold); }
+    .m-silver { background: var(--silver-light); color: var(--silver); }
+    .m-teal { background: var(--teal-light); color: var(--teal); }
+    .award-body { font-size: 11.5px; color: var(--gray-7); line-height: 1.5; }
+    .award-body strong { color: var(--black); font-weight: 500; display: block; }
+
+    /* TAGS */
+    .tag-row { display: flex; flex-wrap: wrap; gap: 5px; }
+    .tag { font-size: 11px; padding: 3px 9px; border: 1px solid var(--gray-1); border-radius: 3px; color: var(--gray-7); cursor: pointer; transition: border-color .15s, color .15s, background .15s; }
+    .tag:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+
+    /* BOTTOM STRIP */
+    .bottom-strip { display: grid; grid-template-columns: repeat(3, 1fr); border-bottom: 1px solid var(--gray-1); }
+    .bot-item { padding: 1.25rem 1.5rem; border-right: 1px solid var(--gray-1); cursor: pointer; transition: background .15s; }
+    .bot-item:first-child { padding-left: 2.5rem; }
+    .bot-item:last-child { border-right: none; }
+    .bot-item:hover { background: var(--gray-0); }
+    .bot-eye { font-size: 10px; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); margin-bottom: .4rem; }
+    .bot-title { font-size: 12.5px; font-weight: 500; line-height: 1.4; margin-bottom: .3rem; transition: color .15s; }
+    .bot-item:hover .bot-title { color: var(--accent); }
+    .bot-desc { font-size: 11px; color: var(--gray-5); line-height: 1.55; font-weight: 300; }
+
+    /* FOOTER */
+    .footer { display: flex; align-items: center; justify-content: space-between; padding: .85rem 2.5rem; border-top: 2px solid var(--black); }
+    .footer-l, .footer-r { font-size: 11px; color: var(--gray-5); }
+
+    /* POST OVERLAY */
+    .post-overlay { position: fixed; inset: 0; background: var(--white); z-index: 100; overflow-y: auto; transform: translateX(100%); transition: transform .35s cubic-bezier(.4,0,.2,1); }
+    .post-overlay.open { transform: translateX(0); }
+    .post-inner { max-width: 680px; margin: 0 auto; padding: 2.5rem 2rem 5rem; }
+    .post-back { font-size: 11px; color: var(--gray-5); cursor: pointer; display: inline-flex; align-items: center; gap: .4rem; margin-bottom: 2rem; transition: color .15s; background: none; border: none; font-family: var(--sans); }
+    .post-back:hover { color: var(--black); }
+    .post-cat { font-size: 10px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); margin-bottom: .6rem; }
+    .post-title { font-family: var(--serif); font-size: 28px; font-weight: 500; line-height: 1.25; margin-bottom: .75rem; }
+    .post-meta { font-size: 12px; color: var(--gray-5); padding-bottom: 1.5rem; border-bottom: 1px solid var(--gray-1); margin-bottom: 1.5rem; }
+    .post-body { font-size: 15px; color: var(--gray-9); line-height: 1.8; font-weight: 300; }
+    .post-body p { margin-bottom: 1.25rem; }
+    .post-body h2 { font-family: var(--serif); font-size: 20px; font-weight: 500; margin: 2rem 0 .75rem; }
+    .post-body h3 { font-size: 15px; font-weight: 500; margin: 1.5rem 0 .5rem; }
+    .post-body blockquote { border-left: 2px solid var(--gray-3); padding-left: 1.25rem; margin: 1.5rem 0; color: var(--gray-7); font-style: italic; font-family: var(--serif); font-size: 16px; }
+    .post-body code { font-family: monospace; font-size: 13px; background: var(--gray-0); padding: 2px 6px; border-radius: 3px; }
+    .post-body pre { background: var(--gray-0); padding: 1rem 1.25rem; border-radius: 6px; overflow-x: auto; margin: 1rem 0 1.5rem; }
+    .post-body pre code { font-size: 12.5px; background: none; padding: 0; }
+    .post-body ul, .post-body ol { padding-left: 1.5rem; margin-bottom: 1.25rem; }
+    .post-body li { margin-bottom: .4rem; }
+
+    /* LANG FADE */
+    .lang-fade { transition: opacity .2s; }
+    .lang-fade.switching { opacity: 0; }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      .body-grid { grid-template-columns: 1fr; }
+      .side-col { border-top: 1px solid var(--gray-1); }
+      .bottom-strip { grid-template-columns: 1fr; }
+      .bot-item { border-right: none; border-bottom: 1px solid var(--gray-1); padding-left: 1.5rem; }
+      .bot-item:first-child { padding-left: 1.5rem; }
+      .mast-name { font-size: 28px; }
+      .topbar { padding: .55rem 1.25rem; flex-wrap: wrap; gap: .5rem; }
+      .masthead, .main-col, .catnav, .footer { padding-left: 1.25rem; padding-right: 1.25rem; }
+      .side-col { padding: 1.5rem 1.25rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="homepage" class="lang-fade">
+
+  <div class="topbar">
+    <span class="topbar-date" id="current-date"></span>
+    <div class="topbar-right">
+      <div class="topbar-links">
+        <a onclick="openPost('tentang')" data-id="nav-about">Tentang</a>
+        <a href="https://rpubs.com/Frankach" target="_blank">RPubs</a>
+        <a href="https://linkedin.com/in/frenkhy-tonga-retang" target="_blank">LinkedIn</a>
+        <a href="https://github.com/frenkhyretang" target="_blank">GitHub</a>
+      </div>
+      <div class="lang-toggle">
+        <button class="lang-btn active" id="btn-id" onclick="setLang('id')">ID</button>
+        <button class="lang-btn" id="btn-en" onclick="setLang('en')">EN</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="masthead">
+    <div class="mast-label" data-id="mast-label">Personal journal of</div>
+    <div class="mast-name">Frenkhy Tonga Retang</div>
+    <div class="mast-sub" data-id="mast-sub">Data Science &middot; Riset &middot; Opini &mdash; Institut Teknologi Sains Bandung</div>
+  </div>
+
+  <nav class="catnav">
+    <a class="active" onclick="filterPosts('semua', this)" data-id="cat-all">Semua</a>
+    <a onclick="filterPosts('data', this)">Data &amp; Analysis</a>
+    <a onclick="filterPosts('opini', this)" data-id="cat-opinion">Opini</a>
+    <a onclick="filterPosts('riset', this)" data-id="cat-research">Riset</a>
+    <a onclick="filterPosts('pencapaian', this)" data-id="cat-achievement">Pencapaian</a>
+    <a onclick="filterPosts('refleksi', this)" data-id="cat-reflection">Refleksi</a>
+  </nav>
+
+  <div class="body-grid">
+    <div class="main-col">
+      <div class="eyebrow" data-id="eyebrow-featured">Artikel pilihan</div>
+      <div class="featured">
+        <div class="feat-cat">Data &amp; Analysis &middot; E-Commerce</div>
+        <div class="feat-title" onclick="openPost('ecommerce')" data-id="feat-title"></div>
+        <div class="feat-deck" data-id="feat-deck"></div>
+        <div class="byline" data-id="feat-byline"></div>
+      </div>
+
+      <hr class="rule">
+      <div class="eyebrow" data-id="eyebrow-latest">Terbaru</div>
+
+      <div id="article-list">
+        <div class="art-row" data-tag="pencapaian" onclick="openPost('olimpiade')">
+          <div class="art-eye" data-id="a1-eye">Pencapaian &middot; Olimpiade</div>
+          <div class="art-title" data-id="a1-title"></div>
+          <div class="art-meta" data-id="a1-meta"></div>
+        </div>
+        <div class="art-row" data-tag="data" onclick="openPost('python')">
+          <div class="art-eye">Python &middot; Data Engineering</div>
+          <div class="art-title" data-id="a2-title"></div>
+          <div class="art-meta" data-id="a2-meta"></div>
+        </div>
+        <div class="art-row" data-tag="opini" onclick="openPost('demokrasi')">
+          <div class="art-eye" data-id="a3-eye">Opini &middot; Teknologi</div>
+          <div class="art-title" data-id="a3-title"></div>
+          <div class="art-meta" data-id="a3-meta"></div>
+        </div>
+        <div class="art-row" data-tag="riset" onclick="openPost('montecarlo')">
+          <div class="art-eye">R &middot; Visualisasi</div>
+          <div class="art-title" data-id="a4-title"></div>
+          <div class="art-meta" data-id="a4-meta"></div>
+        </div>
+        <div class="art-row" data-tag="refleksi" onclick="openPost('refleksi')">
+          <div class="art-eye" data-id="a5-eye">Refleksi &middot; Karier</div>
+          <div class="art-title" data-id="a5-title"></div>
+          <div class="art-meta" data-id="a5-meta"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col">
+      <div class="side-section">
+        <div class="side-label" data-id="side-about">Tentang penulis</div>
+        <div class="bio-name">Frenkhy Tonga Retang</div>
+        <div class="bio-desc" data-id="bio-desc"></div>
+        <div class="bio-links">
+          <a class="bio-link" href="https://github.com/frenkhyretang" target="_blank">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+            github.com/frenkhyretang
+          </a>
+          <a class="bio-link" href="https://rpubs.com/Frankach" target="_blank">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            rpubs.com/Frankach
+          </a>
+          <a class="bio-link" href="https://linkedin.com/in/frenkhy-tonga-retang" target="_blank">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+            LinkedIn
+          </a>
+          <a class="bio-link" href="mailto:frenkhy.contact@gmail.com">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            <span data-id="contact-link">Hubungi saya</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="side-section">
+        <div class="side-label" data-id="side-achievements">Pencapaian</div>
+        <div class="award-row">
+          <span class="medal m-gold" data-id="medal-gold">Emas</span>
+          <div class="award-body"><strong data-id="award1-title">Bahasa Inggris &mdash; Nasional</strong><span data-id="award1-sub">Olimpiade Sains Hardiknas &middot; Mei 2026</span></div>
+        </div>
+        <div class="award-row">
+          <span class="medal m-silver" data-id="medal-silver">Perak</span>
+          <div class="award-body"><strong data-id="award2-title">Matematika &mdash; Nasional</strong><span data-id="award2-sub">Olimpiade Sains Hardiknas &middot; Mei 2026</span></div>
+        </div>
+        <div class="award-row">
+          <span class="medal m-teal" data-id="medal-scholar">Beasiswa</span>
+          <div class="award-body"><strong data-id="award3-title">Parsial Sinarmas Group</strong><span data-id="award3-sub">Institut Teknologi Sains Bandung</span></div>
+        </div>
+      </div>
+
+      <div class="side-section">
+        <div class="side-label" data-id="side-topics">Topik</div>
+        <div class="tag-row">
+          <span class="tag" onclick="filterPostsFromTag('data')">Data Science</span>
+          <span class="tag" onclick="filterPostsFromTag('data')">Python</span>
+          <span class="tag" onclick="filterPostsFromTag('riset')">R</span>
+          <span class="tag" onclick="filterPostsFromTag('data')">Statistics</span>
+          <span class="tag" onclick="filterPostsFromTag('data')">E-Commerce</span>
+          <span class="tag" onclick="filterPostsFromTag('opini')">Opinion</span>
+          <span class="tag" onclick="filterPostsFromTag('pencapaian')">Olympiad</span>
+          <span class="tag" onclick="filterPostsFromTag('riset')">Research</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-strip">
+    <div class="bot-item" onclick="openPost('probability')">
+      <div class="bot-eye" data-id="b1-eye">Riset &middot; Probabilitas</div>
+      <div class="bot-title" data-id="b1-title"></div>
+      <div class="bot-desc" data-id="b1-desc"></div>
+    </div>
+    <div class="bot-item" onclick="openPost('refleksi')">
+      <div class="bot-eye" data-id="b2-eye">Refleksi &middot; Karier</div>
+      <div class="bot-title" data-id="b2-title"></div>
+      <div class="bot-desc" data-id="b2-desc"></div>
+    </div>
+    <div class="bot-item" onclick="openPost('montecarlo')">
+      <div class="bot-eye">Tutorial &middot; R</div>
+      <div class="bot-title" data-id="b3-title"></div>
+      <div class="bot-desc" data-id="b3-desc"></div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span class="footer-l">&copy; 2026 Frenkhy Tonga Retang</span>
+    <span class="footer-r">frenkhyretang.github.io</span>
+  </div>
+</div>
+
+<!-- POST OVERLAY -->
+<div id="postOverlay" class="post-overlay">
+  <div class="post-inner">
+    <button class="post-back" id="post-back-btn" onclick="closePost()">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="15 18 9 12 15 6"/></svg>
+      <span id="back-label">Kembali ke beranda</span>
+    </button>
+    <div class="post-cat" id="post-cat"></div>
+    <h1 class="post-title" id="post-title"></h1>
+    <div class="post-meta" id="post-meta"></div>
+    <div class="post-body" id="post-body"></div>
+  </div>
+</div>
+
+<script>
+// ── DATE ──
+const dayNames = {
+  id: ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'],
+  en: ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday']
+};
+const monthNames = {
+  id: ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'],
+  en: ['January','February','March','April','May','June','July','August','September','October','November','December']
+};
+const d = new Date();
+function updateDate(lang) {
+  const dn = dayNames[lang], mn = monthNames[lang];
+  document.getElementById('current-date').textContent =
+    dn[d.getDay()] + ', ' + d.getDate() + ' ' + mn[d.getMonth()] + ' ' + d.getFullYear();
+}
+
+// ── UI STRINGS ──
+const ui = {
+  id: {
+    'nav-about': 'Tentang',
+    'mast-label': 'Jurnal pribadi dari',
+    'mast-sub': 'Data Science · Riset · Opini — Institut Teknologi Sains Bandung',
+    'cat-all': 'Semua', 'cat-opinion': 'Opini', 'cat-research': 'Riset',
+    'cat-achievement': 'Pencapaian', 'cat-reflection': 'Refleksi',
+    'eyebrow-featured': 'Artikel pilihan', 'eyebrow-latest': 'Terbaru',
+    'feat-title': 'Apa yang tersembunyi di balik 10.000 transaksi e-commerce Indonesia — analisis multi-platform',
+    'feat-deck': 'Scraping lintas lima platform mengungkap pola harga, ulasan, dan perilaku penjual yang tidak terlihat konsumen biasa. Laporan data dari perspektif mahasiswa yang membangun sistemnya dari nol.',
+    'feat-byline': 'Frenkhy Tonga Retang · Data & Analisis · Juni 2026',
+    'a1-eye': 'Pencapaian · Olimpiade',
+    'a1-title': 'Medali emas di tengah kuliah penuh: strategi dan cerita di balik Olimpiade Sains Hardiknas 2026',
+    'a1-meta': 'Mei 2026 · 6 menit baca',
+    'a2-title': 'Mengapa saya memilih membangun semua fungsi data preparation sendiri, bukan mengandalkan library',
+    'a2-meta': 'April 2026 · 8 menit baca',
+    'a3-eye': 'Opini · Teknologi',
+    'a3-title': 'Data bukan sekadar angka: argumen untuk literasi data sebagai hak demokratis di Indonesia',
+    'a3-meta': 'Maret 2026 · 5 menit baca',
+    'a4-title': 'KPI dashboard dan Monte Carlo di R: ketika visualisasi berbicara lebih keras dari laporan biasa',
+    'a4-meta': 'Februari 2026 · 7 menit baca',
+    'a5-eye': 'Refleksi · Karier',
+    'a5-title': 'Dari UKM Bahasa Inggris ke data science: dua dunia yang ternyata saling memperkuat',
+    'a5-meta': 'Januari 2026 · 5 menit baca',
+    'side-about': 'Tentang penulis',
+    'bio-desc': 'Mahasiswa Data Science di Institut Teknologi Sains Bandung. Penerima beasiswa parsial Sinarmas Group. Tertarik pada persimpangan antara data, bahasa, dan kebijakan publik.',
+    'contact-link': 'Hubungi saya',
+    'side-achievements': 'Pencapaian',
+    'medal-gold': 'Emas', 'medal-silver': 'Perak', 'medal-scholar': 'Beasiswa',
+    'award1-title': 'Bahasa Inggris — Nasional', 'award1-sub': 'Olimpiade Sains Hardiknas · Mei 2026',
+    'award2-title': 'Matematika — Nasional', 'award2-sub': 'Olimpiade Sains Hardiknas · Mei 2026',
+    'award3-title': 'Parsial Sinarmas Group', 'award3-sub': 'Institut Teknologi Sains Bandung',
+    'side-topics': 'Topik',
+    'b1-eye': 'Riset · Probabilitas',
+    'b1-title': 'Essentials of probability: catatan UTS yang menjadi referensi lebih dari sekadar ujian',
+    'b1-desc': 'Rekap konsep probabilitas fundamental yang dibangun dari pemahaman, bukan hafalan.',
+    'b2-eye': 'Refleksi · Karier',
+    'b2-title': 'Dari UKM Bahasa Inggris ke data science: dua dunia yang ternyata saling memperkuat',
+    'b2-desc': 'Esai personal tentang identitas, ambisi, dan cara belajar yang tidak linier.',
+    'b3-title': 'Aljabar linear untuk data scientist: dari teori kuliah ke implementasi nyata',
+    'b3-desc': 'Menjembatani gap antara matematika formal dan kode yang benar-benar berjalan.',
+    'back-label': 'Kembali ke beranda',
+  },
+  en: {
+    'nav-about': 'About',
+    'mast-label': 'Personal journal of',
+    'mast-sub': 'Data Science · Research · Opinion — Institut Teknologi Sains Bandung',
+    'cat-all': 'All', 'cat-opinion': 'Opinion', 'cat-research': 'Research',
+    'cat-achievement': 'Achievements', 'cat-reflection': 'Reflections',
+    'eyebrow-featured': 'Featured article', 'eyebrow-latest': 'Latest',
+    'feat-title': 'What hides behind 10,000 Indonesian e-commerce transactions — a multi-platform analysis',
+    'feat-deck': 'Scraping across five platforms reveals pricing patterns, review behavior, and seller tactics invisible to the average consumer. A data report from a student who built the entire system from scratch.',
+    'feat-byline': 'Frenkhy Tonga Retang · Data & Analysis · June 2026',
+    'a1-eye': 'Achievement · Olympiad',
+    'a1-title': 'A gold medal mid-semester: strategy and story behind the 2026 Hardiknas Science Olympiad',
+    'a1-meta': 'May 2026 · 6 min read',
+    'a2-title': 'Why I chose to build every data preparation function from scratch instead of relying on libraries',
+    'a2-meta': 'April 2026 · 8 min read',
+    'a3-eye': 'Opinion · Technology',
+    'a3-title': 'Data is more than numbers: an argument for data literacy as a democratic right in Indonesia',
+    'a3-meta': 'March 2026 · 5 min read',
+    'a4-title': 'KPI dashboards and Monte Carlo in R: when visualization speaks louder than the report itself',
+    'a4-meta': 'February 2026 · 7 min read',
+    'a5-eye': 'Reflection · Career',
+    'a5-title': 'From English club to data science: two worlds that turned out to strengthen each other',
+    'a5-meta': 'January 2026 · 5 min read',
+    'side-about': 'About the author',
+    'bio-desc': 'Data Science student at Institut Teknologi Sains Bandung. Recipient of a partial Sinarmas Group scholarship. Interested in the intersection of data, language, and public policy.',
+    'contact-link': 'Contact me',
+    'side-achievements': 'Achievements',
+    'medal-gold': 'Gold', 'medal-silver': 'Silver', 'medal-scholar': 'Scholar',
+    'award1-title': 'English — National', 'award1-sub': 'Hardiknas Science Olympiad · May 2026',
+    'award2-title': 'Mathematics — National', 'award2-sub': 'Hardiknas Science Olympiad · May 2026',
+    'award3-title': 'Partial Sinarmas Group Scholarship', 'award3-sub': 'Institut Teknologi Sains Bandung',
+    'side-topics': 'Topics',
+    'b1-eye': 'Research · Probability',
+    'b1-title': 'Essentials of probability: exam notes that became a reference beyond the test',
+    'b1-desc': 'A recap of fundamental probability concepts built from understanding, not memorization.',
+    'b2-eye': 'Reflection · Career',
+    'b2-title': 'From English club to data science: two worlds that turned out to strengthen each other',
+    'b2-desc': 'A personal essay about identity, ambition, and non-linear learning.',
+    'b3-title': 'Linear algebra for data scientists: from lecture theory to working code',
+    'b3-desc': 'Bridging the gap between formal mathematics and code that actually runs.',
+    'back-label': 'Back to home',
+  }
+};
+
+// ── POSTS (bilingual) ──
+const posts = {
+  ecommerce: {
+    id: {
+      cat: 'Data & Analisis · E-Commerce',
+      title: 'Apa yang tersembunyi di balik 10.000 transaksi e-commerce Indonesia — analisis multi-platform',
+      meta: 'Frenkhy Tonga Retang · Juni 2026 · 9 menit baca',
+      body: `<p>Ketika sebagian besar konsumen membuka Shopee atau Tokopedia, yang mereka lihat adalah harga dan rating. Tapi di balik angka-angka itu, tersembunyi pola yang jauh lebih kompleks — pola yang hanya bisa dilihat jika kita mengumpulkan data secara sistematis dari banyak platform sekaligus.</p>
+      <h2>Mengapa scraping multi-platform?</h2>
+      <p>Proyek ini berangkat dari satu pertanyaan sederhana: apakah harga produk yang sama benar-benar berbeda antar platform? Untuk menjawabnya, saya membangun sistem scraping menggunakan R dan Python yang mengumpulkan data dari lima platform: Shopee, Tokopedia, Lazada, TikTok Shop, dan Blibli. Total: lebih dari 10.000 baris data transaksi.</p>
+      <h2>Yang ditemukan</h2>
+      <ul><li>Dispersi harga untuk produk identik bisa mencapai <strong>40%</strong> antar platform</li><li>Rating penjual memiliki korelasi lemah dengan harga</li><li>TikTok Shop menunjukkan pola promosi paling agresif</li></ul>
+      <blockquote>Data tidak pernah berbohong. Yang berbohong adalah cara kita membacanya.</blockquote>
+      <p>Proyek lengkap tersedia di RPubs saya dengan metodologi, kode, dan visualisasi yang terdokumentasi.</p>`
+    },
+    en: {
+      cat: 'Data & Analysis · E-Commerce',
+      title: 'What hides behind 10,000 Indonesian e-commerce transactions — a multi-platform analysis',
+      meta: 'Frenkhy Tonga Retang · June 2026 · 9 min read',
+      body: `<p>When most consumers open Shopee or Tokopedia, they see prices and ratings. But beneath those numbers lie far more complex patterns — patterns only visible when data is collected systematically across multiple platforms at once.</p>
+      <h2>Why multi-platform scraping?</h2>
+      <p>This project started with a simple question: do prices for the same product really differ across platforms? To answer it, I built a scraping system using R and Python that collected data from five platforms simultaneously: Shopee, Tokopedia, Lazada, TikTok Shop, and Blibli. Total: over 10,000 rows of transaction data.</p>
+      <h2>What we found</h2>
+      <ul><li>Price dispersion for identical products can reach <strong>40%</strong> across platforms</li><li>Seller ratings have a weak correlation with price</li><li>TikTok Shop shows the most aggressive promotion patterns</li></ul>
+      <blockquote>Data never lies. What lies is how we read it.</blockquote>
+      <p>The full project is available on my RPubs with documented methodology, code, and visualizations.</p>`
+    }
+  },
+  olimpiade: {
+    id: {
+      cat: 'Pencapaian · Olimpiade',
+      title: 'Medali emas di tengah kuliah penuh: strategi dan cerita di balik Olimpiade Sains Hardiknas 2026',
+      meta: 'Frenkhy Tonga Retang · Mei 2026 · 6 menit baca',
+      body: `<p>3 Mei 2026. Saya pulang membawa dua medali dari Olimpiade Sains Hardiknas tingkat nasional: emas untuk Bahasa Inggris, perak untuk Matematika. Ini bukan keberuntungan — ini hasil dari sistem belajar yang dibangun selama berbulan-bulan di sela-sela kuliah penuh.</p>
+      <h2>Konteks yang perlu diketahui</h2>
+      <p>Saat mempersiapkan olimpiade, saya sedang menjalani semester padat: praktikum data science, sistem informasi manajemen, dan proyek kelompok. Tidak ada waktu untuk belajar "nonstop" — hanya waktu yang terbatas dan harus digunakan sangat efisien.</p>
+      <h2>Sistem yang berhasil</h2>
+      <p>Kunci utama: saya tidak belajar lebih lama, saya belajar lebih terarah. Untuk Bahasa Inggris, latar belakang di UKM Bahasa Inggris memberikan fondasi kuat. Untuk Matematika, pemahaman konsep dari kuliah kalkulus dan aljabar linear sangat membantu.</p>
+      <blockquote>Bukan siapa yang paling lama belajar yang menang. Tapi siapa yang paling tahu apa yang perlu dipelajari.</blockquote>`
+    },
+    en: {
+      cat: 'Achievement · Olympiad',
+      title: 'A gold medal mid-semester: strategy and story behind the 2026 Hardiknas Science Olympiad',
+      meta: 'Frenkhy Tonga Retang · May 2026 · 6 min read',
+      body: `<p>May 3, 2026. I came home with two medals from the national Hardiknas Science Olympiad: gold in English, silver in Mathematics. This wasn't luck — it was the result of a learning system built over months, squeezed between a full course load.</p>
+      <h2>Context you should know</h2>
+      <p>While preparing for the olympiad, I was running through a packed semester: data science practicals, management information systems, and group projects. There was no time for "nonstop" studying — only limited time that had to be used with precision.</p>
+      <h2>What worked</h2>
+      <p>The key: I didn't study longer, I studied more deliberately. For English, years of activity in the English club provided a strong foundation. For Mathematics, conceptual understanding from calculus and linear algebra lectures proved far more useful than memorizing formulas.</p>
+      <blockquote>It's not who studies the longest who wins. It's who knows most clearly what needs to be studied.</blockquote>`
+    }
+  },
+  python: {
+    id: {
+      cat: 'Python · Data Engineering',
+      title: 'Mengapa saya memilih membangun semua fungsi data preparation sendiri, bukan mengandalkan library',
+      meta: 'Frenkhy Tonga Retang · April 2026 · 8 menit baca',
+      body: `<p>Ini mungkin terdengar seperti menyulitkan diri sendiri. Pandas sudah ada. NumPy sudah ada. Kenapa harus menulis ulang sesuatu yang sudah dikerjakan dengan baik?</p>
+      <h2>Masalah dengan abstraksi yang terlalu cepat</h2>
+      <p>Banyak mahasiswa data science belajar langsung menggunakan library tingkat tinggi. Hasilnya bekerja, tapi pemahaman tentang apa yang sebenarnya terjadi sering kali tidak ikut berkembang. Ketika saya mengerjakan proyek scraping e-commerce, saya memutuskan untuk sengaja tidak menggunakan pandas untuk cleaning — hanya Python native.</p>
+      <h2>Yang saya bangun</h2>
+      <ul><li>Fungsi normalisasi harga (hapus "Rp", konversi ke float)</li><li>Fungsi deteksi outlier menggunakan IQR manual</li><li>Deduplication berbasis similarity score</li><li>Parser tanggal format Indonesia yang inkonsisten</li></ul>
+      <blockquote>Memahami sesuatu dari bawah ke atas bukan berarti kamu harus selalu melakukannya dari bawah ke atas. Tapi sekali saja, sangat worth it.</blockquote>`
+    },
+    en: {
+      cat: 'Python · Data Engineering',
+      title: 'Why I chose to build every data preparation function from scratch instead of relying on libraries',
+      meta: 'Frenkhy Tonga Retang · April 2026 · 8 min read',
+      body: `<p>This might sound like making things unnecessarily difficult. Pandas exists. NumPy exists. Why rewrite what's already been done well?</p>
+      <h2>The problem with premature abstraction</h2>
+      <p>Many data science students — myself included, at first — learn by jumping straight to high-level libraries. The results work, but understanding of what's actually happening often doesn't grow alongside it. When I started my e-commerce scraping project, I deliberately chose not to use pandas for cleaning — only native Python.</p>
+      <h2>What I built</h2>
+      <ul><li>Price normalization functions (strip "Rp", convert to float)</li><li>Outlier detection using manual IQR</li><li>String similarity-based deduplication</li><li>Indonesian date format parser handling inconsistent inputs</li></ul>
+      <blockquote>Understanding something bottom-up doesn't mean you always have to do it bottom-up. But doing it once is absolutely worth it.</blockquote>`
+    }
+  },
+  demokrasi: {
+    id: {
+      cat: 'Opini · Teknologi & Masyarakat',
+      title: 'Data bukan sekadar angka: argumen untuk literasi data sebagai hak demokratis di Indonesia',
+      meta: 'Frenkhy Tonga Retang · Maret 2026 · 5 menit baca',
+      body: `<p>Setiap hari, jutaan keputusan dibuat atas nama "data". Kebijakan harga, redistribusi bansos, penentuan UMR — semuanya berbasis data. Tapi berapa banyak warga Indonesia yang bisa membaca, mempertanyakan, atau mengkritisi data itu?</p>
+      <h2>Asimetri informasi sebagai masalah demokrasi</h2>
+      <p>Ketika hanya sebagian kecil masyarakat yang bisa memahami visualisasi data atau mengevaluasi metodologi survei — kekuatan untuk mempertanyakan narasi berbasis data hanya dimiliki segelintir orang. Ini bukan sekadar masalah pendidikan. Ini masalah distribusi kekuasaan.</p>
+      <h2>Apa yang dimaksud literasi data?</h2>
+      <p>Bukan kemampuan coding. Literasi data dasar mencakup: membaca grafik dengan kritis, memahami perbedaan korelasi dan kausalitas, dan tahu kapan sebuah angka perlu dipertanyakan sumbernya.</p>
+      <blockquote>Masyarakat yang tidak bisa membaca data adalah masyarakat yang mudah dikendalikan oleh data.</blockquote>`
+    },
+    en: {
+      cat: 'Opinion · Technology & Society',
+      title: 'Data is more than numbers: an argument for data literacy as a democratic right in Indonesia',
+      meta: 'Frenkhy Tonga Retang · March 2026 · 5 min read',
+      body: `<p>Every day, millions of decisions are made in the name of "data." Fuel pricing policy, social aid distribution, minimum wage determination — all data-driven. But how many Indonesians can actually read, question, or critique that data?</p>
+      <h2>Information asymmetry as a democratic problem</h2>
+      <p>When only a small portion of the population can interpret data visualizations or evaluate survey methodology — the power to challenge data-driven narratives belongs to a privileged few. This isn't just an education problem. It's a power distribution problem.</p>
+      <h2>What data literacy actually means</h2>
+      <p>Not coding ability. Basic data literacy means: reading charts critically, understanding the difference between correlation and causation, and knowing when to question a number's source.</p>
+      <blockquote>A society that cannot read data is a society that can easily be controlled by data.</blockquote>`
+    }
+  },
+  montecarlo: {
+    id: {
+      cat: 'R · Visualisasi',
+      title: 'KPI dashboard dan Monte Carlo di R: ketika visualisasi berbicara lebih keras dari laporan biasa',
+      meta: 'Frenkhy Tonga Retang · Februari 2026 · 7 menit baca',
+      body: `<p>Laporan bisnis konvensional sering menjawab pertanyaan yang salah. "Berapa revenue bulan ini?" — valid. Tapi yang lebih penting: "Seberapa mungkin target bulan depan tercapai?" Simulasi Monte Carlo bisa menjawab pertanyaan kedua.</p>
+      <h2>Setup proyek</h2>
+      <p>Proyek ini menggunakan R dengan package utama <code>ggplot2</code>, <code>dplyr</code>, dan <code>kableExtra</code>. Tujuannya: membangun dashboard KPI yang tidak hanya menampilkan angka aktual, tapi juga distribusi probabilistik proyeksi ke depan.</p>
+      <pre><code>n_sim <- 10000
+hasil <- replicate(n_sim, {
+  mean(rnorm(30, mean = rata_rata, sd = std_dev))
+})
+quantile(hasil, c(0.05, 0.5, 0.95))</code></pre>
+      <blockquote>Visualisasi yang baik bukan yang paling indah. Tapi yang paling jujur tentang ketidakpastian.</blockquote>`
+    },
+    en: {
+      cat: 'R · Visualization',
+      title: 'KPI dashboards and Monte Carlo in R: when visualization speaks louder than the report itself',
+      meta: 'Frenkhy Tonga Retang · February 2026 · 7 min read',
+      body: `<p>Conventional business reports often answer the wrong question. "What was this month's revenue?" — valid. But more important: "How likely is next month's target to be met?" Monte Carlo simulation answers the second question.</p>
+      <h2>Project setup</h2>
+      <p>This project uses R with <code>ggplot2</code>, <code>dplyr</code>, and <code>kableExtra</code>. The goal: build a KPI dashboard that shows not just actual numbers, but probabilistic distributions of forward projections.</p>
+      <pre><code>n_sim <- 10000
+results <- replicate(n_sim, {
+  mean(rnorm(30, mean = avg, sd = std_dev))
+})
+quantile(results, c(0.05, 0.5, 0.95))</code></pre>
+      <blockquote>A good visualization isn't the most beautiful one. It's the most honest one about uncertainty.</blockquote>`
+    }
+  },
+  refleksi: {
+    id: {
+      cat: 'Refleksi · Karier',
+      title: 'Dari UKM Bahasa Inggris ke data science: dua dunia yang ternyata saling memperkuat',
+      meta: 'Frenkhy Tonga Retang · Januari 2026 · 5 menit baca',
+      body: `<p>Ketika saya pertama kali masuk UKM Bahasa Inggris di SMA, saya tidak tahu bahwa itu akan menjadi salah satu keputusan paling berpengaruh dalam perjalanan saya ke data science.</p>
+      <h2>Bahasa sebagai sistem logika</h2>
+      <p>Belajar bahasa asing secara serius mengajarkan bahwa setiap bahasa punya sistem logika internalnya sendiri. Grammar bukan sekadar aturan hafalan — ini adalah struktur berpikir. Kemampuan ini sangat relevan saat membaca dan menulis kode.</p>
+      <h2>Komunikasi sebagai kompetensi teknis</h2>
+      <p>Data science yang baik tidak berhenti di model yang akurat. Ia harus dikomunikasikan ke orang yang tidak memahami statistik. Kemampuan ini saya bangun bertahun-tahun lewat debat, presentasi, dan menulis esai dalam bahasa Inggris.</p>
+      <blockquote>Dua dunia yang tampak berbeda sering kali hanya belum menemukan bahasa yang sama untuk mendeskripsikan kesamaannya.</blockquote>`
+    },
+    en: {
+      cat: 'Reflection · Career',
+      title: 'From English club to data science: two worlds that turned out to strengthen each other',
+      meta: 'Frenkhy Tonga Retang · January 2026 · 5 min read',
+      body: `<p>When I first joined the English club in high school, I had no idea it would become one of the most influential decisions in my journey toward data science.</p>
+      <h2>Language as a logic system</h2>
+      <p>Seriously learning a foreign language teaches you that every language has its own internal logic system. Grammar isn't just rules to memorize — it's a structure for thinking. This translates directly to reading and writing code.</p>
+      <h2>Communication as a technical competency</h2>
+      <p>Good data science doesn't end at an accurate model. It must be communicated to people who don't understand statistics. I built this skill over years of debate, presentations, and writing essays in English.</p>
+      <blockquote>Two worlds that seem different have often simply not yet found a shared language to describe their commonalities.</blockquote>`
+    }
+  },
+  probability: {
+    id: {
+      cat: 'Riset · Probabilitas',
+      title: 'Essentials of probability: catatan UTS yang menjadi referensi lebih dari sekadar ujian',
+      meta: 'Frenkhy Tonga Retang · November 2025 · 6 menit baca',
+      body: `<p>Catatan ini awalnya untuk UTS Statistika. Tapi semakin saya menulisnya, semakin saya sadar bahwa sebagian besar konsep probabilitas sering dihafal tanpa benar-benar dipahami.</p>
+      <h2>Konsep yang perlu benar-benar dipahami</h2>
+      <ul>
+        <li><strong>Conditional probability:</strong> P(A|B) bukan "A dan B terjadi bersamaan", tapi "A terjadi <em>given</em> B sudah terjadi"</li>
+        <li><strong>Independence:</strong> Mengetahui satu event tidak mengubah probabilitas event lain</li>
+        <li><strong>Bayes' theorem:</strong> Cara meng-update belief berdasarkan bukti baru — fondasi machine learning modern</li>
+        <li><strong>Expected value:</strong> Rata-rata jangka panjang, bukan prediksi satu kejadian</li>
+      </ul>
+      <blockquote>Probabilitas bukan tentang kepastian. Ia adalah bahasa untuk berbicara tentang ketidakpastian secara presisi.</blockquote>`
+    },
+    en: {
+      cat: 'Research · Probability',
+      title: 'Essentials of probability: exam notes that became a reference beyond the test',
+      meta: 'Frenkhy Tonga Retang · November 2025 · 6 min read',
+      body: `<p>These notes started as prep for a Statistics midterm. But the more I wrote, the more I realized how often probability concepts are memorized without being truly understood.</p>
+      <h2>Concepts that need to be genuinely understood</h2>
+      <ul>
+        <li><strong>Conditional probability:</strong> P(A|B) isn't "A and B happen together" — it's "A occurs <em>given</em> B has already occurred"</li>
+        <li><strong>Independence:</strong> Knowing one event doesn't change the probability of another</li>
+        <li><strong>Bayes' theorem:</strong> How to update beliefs based on new evidence — the foundation of modern machine learning</li>
+        <li><strong>Expected value:</strong> A long-run average, not a prediction of any single outcome</li>
+      </ul>
+      <blockquote>Probability isn't about certainty. It's the language for speaking about uncertainty with precision.</blockquote>`
+    }
+  },
+  tentang: {
+    id: {
+      cat: 'Profil',
+      title: 'Tentang Frenkhy Tonga Retang',
+      meta: 'Institut Teknologi Sains Bandung · Data Science',
+      body: `<p>Halo. Saya Frenkhy Tonga Retang, mahasiswa Data Science semester tiga di Institut Teknologi Sains Bandung (ITSB), penerima beasiswa parsial Sinarmas Group.</p>
+      <h2>Latar belakang</h2>
+      <p>Saya memiliki ketertarikan kuat pada matematika dan teknologi, yang membawa saya memilih Data Science. Selama perkuliahan saya mempelajari fondasi: matematika diskrit, kalkulus, aljabar linear, statistika, dan algoritma pemrograman. Di luar akademik, saya aktif di UKM Bahasa Inggris dan kompetisi sains nasional.</p>
+      <h2>Tentang blog ini</h2>
+      <p>Blog ini adalah ruang untuk mendokumentasikan proses berpikir — bukan hanya hasil akhir. Setiap artikel adalah versi tertulis dari pertanyaan yang saya coba jawab: tentang data, tentang belajar, dan tentang bagaimana keduanya bersinggungan.</p>
+      <p>Hubungi saya lewat <a href="https://linkedin.com/in/frenkhy-tonga-retang" target="_blank" style="color:var(--accent)">LinkedIn</a> atau <a href="https://github.com/frenkhyretang" target="_blank" style="color:var(--accent)">GitHub</a>.</p>`
+    },
+    en: {
+      cat: 'Profile',
+      title: 'About Frenkhy Tonga Retang',
+      meta: 'Institut Teknologi Sains Bandung · Data Science',
+      body: `<p>Hi. I'm Frenkhy Tonga Retang, a third-semester Data Science student at Institut Teknologi Sains Bandung (ITSB) and recipient of a partial Sinarmas Group scholarship.</p>
+      <h2>Background</h2>
+      <p>I have a strong interest in mathematics and technology, which led me to choose Data Science. During my studies I've covered the foundations: discrete mathematics, calculus, linear algebra, statistics, and programming algorithms. Outside academics, I'm active in the English club and national science competitions.</p>
+      <h2>About this blog</h2>
+      <p>This blog is a space to document the thinking process — not just the end result. Every article here is the written version of a question I'm trying to answer: about data, about learning, and about how the two intersect.</p>
+      <p>Reach me via <a href="https://linkedin.com/in/frenkhy-tonga-retang" target="_blank" style="color:var(--accent)">LinkedIn</a> or <a href="https://github.com/frenkhyretang" target="_blank" style="color:var(--accent)">GitHub</a>.</p>`
+    }
+  }
+};
+
+// ── STATE ──
+let currentLang = 'id';
+let currentPostId = null;
+
+// ── LANGUAGE SWITCH ──
+function setLang(lang) {
+  if (lang === currentLang) return;
+  const hp = document.getElementById('homepage');
+  hp.classList.add('switching');
+  setTimeout(() => {
+    currentLang = lang;
+    document.getElementById('btn-id').classList.toggle('active', lang === 'id');
+    document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+    document.documentElement.lang = lang;
+    updateDate(lang);
+    // Update all data-id elements
+    const strings = ui[lang];
+    document.querySelectorAll('[data-id]').forEach(el => {
+      const key = el.getAttribute('data-id');
+      if (strings[key] !== undefined) el.textContent = strings[key];
+    });
+    // If a post is open, re-render it
+    if (currentPostId && document.getElementById('postOverlay').classList.contains('open')) {
+      renderPost(currentPostId);
+    }
+    hp.classList.remove('switching');
+  }, 200);
+}
+
+// ── POST RENDERING ──
+function renderPost(id) {
+  const p = posts[id];
+  if (!p) return;
+  const v = p[currentLang] || p['id'];
+  document.getElementById('post-cat').textContent = v.cat;
+  document.getElementById('post-title').textContent = v.title;
+  document.getElementById('post-meta').textContent = v.meta;
+  document.getElementById('post-body').innerHTML = v.body;
+  document.getElementById('back-label').textContent = ui[currentLang]['back-label'];
+}
+
+function openPost(id) {
+  currentPostId = id;
+  renderPost(id);
+  const overlay = document.getElementById('postOverlay');
+  overlay.style.display = 'block';
+  requestAnimationFrame(() => requestAnimationFrame(() => overlay.classList.add('open')));
+  overlay.scrollTop = 0;
+  document.body.style.overflow = 'hidden';
+}
+
+function closePost() {
+  const overlay = document.getElementById('postOverlay');
+  overlay.classList.remove('open');
+  document.body.style.overflow = '';
+  setTimeout(() => { overlay.style.display = 'none'; currentPostId = null; }, 350);
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closePost(); });
+
+function filterPosts(tag, el) {
+  document.querySelectorAll('.catnav a').forEach(a => a.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('#article-list .art-row').forEach(row => {
+    row.style.display = (tag === 'semua' || tag === 'all' || row.dataset.tag === tag) ? 'block' : 'none';
+  });
+}
+
+function filterPostsFromTag(tag) {
+  const navLinks = document.querySelectorAll('.catnav a');
+  navLinks.forEach(a => a.classList.remove('active'));
+  navLinks[0].classList.add('active');
+  document.querySelectorAll('#article-list .art-row').forEach(row => {
+    row.style.display = (row.dataset.tag === tag) ? 'block' : 'none';
+  });
+  document.querySelector('.body-grid').scrollIntoView({ behavior: 'smooth' });
+}
+
+// ── INIT ──
+updateDate('id');
+setLang('id');
+// Force render initial strings
+setTimeout(() => {
+  const strings = ui['id'];
+  document.querySelectorAll('[data-id]').forEach(el => {
+    const key = el.getAttribute('data-id');
+    if (strings[key] !== undefined) el.textContent = strings[key];
+  });
+}, 0);
+</script>
+</body>
+</html>
